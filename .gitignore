@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.pkl
+*.pt
+*.pth
+*.ckpt
+*.egg-info/
+.pytest_cache/
+.env
+runs/
+processed/
+results/*
+!results/README.md
+checkpoints/*
+!checkpoints/README.md
+data/*
+!data/README.md
