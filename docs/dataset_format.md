@@ -1,6 +1,6 @@
 # Dataset and graph format
 
-REGCAP accepts prepared C/C++ function files and matching Joern graph JSON. It does not redistribute benchmark content or include a Joern exporter. The paper used Joern v2.0.86. If you start from raw benchmark records, export each function and construct a JSON record with the keys below before running REGCAP preprocessing.
+REGCAP accepts prepared C/C++ function files and matching Joern graph JSON. It does not redistribute benchmark content. A [Joern exporter](../scripts/prepare/export_ast_ccd_from_dot.sc) is available in [scripts/prepare/](../scripts/prepare/). The paper used Joern v2.0.86. If you start from raw benchmark records, export each function and construct a JSON record with the keys below before running REGCAP preprocessing.
 
 ## Obtain the benchmarks
 
@@ -10,7 +10,7 @@ REGCAP accepts prepared C/C++ function files and matching Joern graph JSON. It d
 | DiverseVul | [DiverseVul release](https://github.com/wagner-group/diversevul) | Extract labeled functions from the released records. |
 | PrimeVul | [PrimeVul release](https://github.com/DLVulDet/PrimeVul) | Preserve the official chronological train/validation/test split. |
 
-The benchmark releases do not directly provide this repository's C-file, Joern-JSON, vulnerable-line, and Word2Vec layout. Prepare those derived inputs locally. Record the source release, split, Joern version, and embedding training settings used for a reproduction. The source code here does not include a script that converts raw benchmark JSON/JSONL into the exact prepared layout.
+The benchmark releases do not directly provide this repository's C-file, Joern-JSON, vulnerable-line, and Word2Vec layout. Prepare those derived inputs locally. Record the source release, split, Joern version, and embedding training settings used for a reproduction. [scripts/prepare/](../scripts/prepare/) includes [PrimeVul JSONL-to-C conversion](../scripts/prepare/primevul_jsonl_to_c.py) and [paired JSONL conversion](../scripts/prepare/build_primevul_files.py); additional preparation may be needed to produce the exact layout for other benchmarks.
 
 ## Prepared layout
 

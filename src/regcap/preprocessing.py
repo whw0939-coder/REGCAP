@@ -1154,7 +1154,7 @@ class DatasetBuilder(RegionFeatureBuilderMixin):
             line_embeddings.append(emb)
 
         embeddings_tensor = torch.from_numpy(np.array(line_embeddings, dtype=np.float32))
-        assert embeddings_tensor.ndim == 2, f"维度错误，应为(n, d)，实际得到{embeddings_tensor.shape}"
+        assert embeddings_tensor.ndim == 2, f"Expected a two-dimensional tensor (n, d), got {embeddings_tensor.shape}"
         return embeddings_tensor
 
 
