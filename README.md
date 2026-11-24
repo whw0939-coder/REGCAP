@@ -13,7 +13,7 @@ REGCAP detects vulnerable C/C++ functions with source-ordered AST regions. It en
 - `src/regcap/data_loading.py`: splits, source-order region selection, padding, and batching.
 - `src/regcap/model.py` and `training.py`: five-view fusion, region scoring, optimization, and metrics.
 - `src/regcap/cli.py`: preprocessing, training, evaluation, prediction, and smoke commands.
-- `scripts/`: shell wrappers; `docs/`: input format and reproduction details.
+- `scripts/`: shell wrappers and [data preparation utilities](scripts/prepare/); `docs/`: input format and reproduction details.
 
 ## Environment
 
@@ -50,7 +50,17 @@ The commands also accept explicit dataset paths. See [reproduction steps](docs/r
 
 ## Data preparation and program representation
 
-Preprocessing requires one C/C++ function file and matching Joern JSON per sample, a vulnerable-line annotation JSON, and dataset-specific 128-dimensional Gensim Word2Vec vectors. The repository expects pre-generated Joern exports; it does not acquire benchmarks, export Joern graphs, or train Word2Vec. The [data format](docs/dataset_format.md) specifies filenames, graph keys, line numbering, and output layout.
+Preprocessing requires one C/C++ function file and matching Joern JSON per sample, a vulnerable-line annotation JSON, and dataset-specific 128-dimensional Gensim Word2Vec vectors. The repository does not distribute benchmark data or generated inputs. The [data format](docs/dataset_format.md) describes the original prepared-input interface. The following utilities are provided in [`scripts/prepare/`](scripts/prepare/):
+
+- [`primevul_jsonl_to_c.py`](scripts/prepare/primevul_jsonl_to_c.py): export classified PrimeVul functions.
+- [`build_primevul_files.py`](scripts/prepare/build_primevul_files.py): supplementary utility for classified and paired PrimeVul JSONL files.
+- [`identify_vulnerable_lines.py`](scripts/prepare/identify_vulnerable_lines.py), [`filter_no_diff_entries.py`](scripts/prepare/filter_no_diff_entries.py), and [`extract_vulnerable_lines.py`](scripts/prepare/extract_vulnerable_lines.py): derive and format vulnerable-line annotations.
+- [`export_ast_ccd_from_dot.sc`](scripts/prepare/export_ast_ccd_from_dot.sc): export program graphs using Joern v2.0.86. Set `SRC_BASE` and `OUT_BASE` to the input and output directories. Use a dedicated workspace: the exporter clears its local `out/` directory and writes error logs under an input-derived path.
+- [`train_word2vec.py`](scripts/prepare/train_word2vec.py): train dataset-specific 128-dimensional Word2Vec embeddings.
+
+Use `--help` on the Python utilities for their arguments. Run preparation in dedicated input, working and output directories to avoid overwriting existing files.
+
+For FFmpeg+Qemu and DiverseVul, the corresponding fixed versions of vulnerable functions were retrieved from their original project repositories using the commit IDs provided in the datasets. The vulnerable and fixed versions are then compared using the same vulnerable-line extraction utilities.
 
 Regions follow top-down AST structure using `METHOD`, `BLOCK`, and `CONTROL_STRUCTURE` anchors. Boundaries use syntax alone. Token, AST, CFG, PDG, and RDP representations align to those regions. At most 17 source-ordered regions are retained by uniform index selection; shorter sequences are masked and padded.
 

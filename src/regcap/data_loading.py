@@ -90,13 +90,13 @@ class GlobalDataModule(pl.LightningDataModule):
 
         if self._use_pre_split_mode():
             if self.cwe_mode:
-                raise ValueError("pre-split 模式不能与 cwe_mode 同时使用。")
+                raise ValueError("Pre-split mode cannot be used with cwe_mode.")
 
             if self.cross_data_path is not None:
-                raise ValueError("pre-split 模式不能与 cross_data_path 同时使用。")
+                raise ValueError("Pre-split mode cannot be used with cross_data_path.")
 
             if not self.train_data_path or not self.val_data_path or not self.test_data_path:
-                raise ValueError("使用官方划分模式时，必须同时提供 train_data_path / val_data_path / test_data_path。")
+                raise ValueError("Official split mode requires train_data_path, val_data_path, and test_data_path.")
 
             for p, name in [
                 (self.train_data_path, "train_data_path"),
@@ -104,20 +104,20 @@ class GlobalDataModule(pl.LightningDataModule):
                 (self.test_data_path, "test_data_path"),
             ]:
                 if not os.path.isfile(p):
-                    raise FileNotFoundError(f"{name} 不存在: {p}")
+                    raise FileNotFoundError(f"{name} does not exist: {p}")
 
             return
 
         if self.cwe_mode:
             if not os.path.isdir(self.data_path):
-                raise FileNotFoundError(f"CWE 模式下，请指定包含多个 .pkl 的目录，而不是单文件：{self.data_path}")
+                raise FileNotFoundError(f"CWE mode requires a directory containing multiple .pkl files, not a single file: {self.data_path}")
         else:
             if not os.path.isfile(self.data_path):
-                raise FileNotFoundError(f"数据文件不存在: {self.data_path}")
+                raise FileNotFoundError(f"Data file does not exist: {self.data_path}")
 
         if self.cross_data_path is not None:
             if not os.path.isfile(self.cross_data_path):
-                raise FileNotFoundError(f"跨数据集 测试数据文件不存在: {self.cross_data_path}")
+                raise FileNotFoundError(f"Cross-dataset test file does not exist: {self.cross_data_path}")
 
     def setup(self, stage: str = None):
 
@@ -144,7 +144,7 @@ class GlobalDataModule(pl.LightningDataModule):
 
         if self.cwe_mode:
             if self.cross_data_path is not None:
-                raise ValueError("当前实现不支持 cwe_mode 与 cross_data_path 同时使用。请只启用其一。")
+                raise ValueError("cwe_mode and cross_data_path cannot be used together. Enable only one.")
 
             train_list, val_list, test_list = [], [], []
             g = torch.Generator().manual_seed(self.seed)
